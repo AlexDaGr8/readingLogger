@@ -1,7 +1,7 @@
 import { Store } from '@/store/Store';
 
 export interface logItem {
-    uuid?: string;
+    uuid?: string | null;
     book: string;
     date: Date;
     time?: string | null;
@@ -14,6 +14,7 @@ export interface logItem {
 
 export interface ReadState extends Object {
     readingLog: logItem[];
+    editItem: logItem | undefined;
 }
 
 const STORAGE_NAME = 'readingLog';
@@ -37,7 +38,8 @@ class ReadStore extends Store<ReadState> {
     protected data(): ReadState {
         if (!localStorage[STORAGE_NAME]) {
             let readState: ReadState = {
-                readingLog: [] as logItem[]
+                readingLog: [] as logItem[],
+                editItem: undefined
             };
             this.setLocalStorage(readState);
         }
@@ -54,19 +56,65 @@ class ReadStore extends Store<ReadState> {
     async deleteItem(item: logItem) {
         return new Promise((res, rej) => {
             let foundId = this.state.readingLog.findIndex((d: logItem) => d.uuid === item.uuid);
-            if (!foundId) { rej(`Item not found ${item}`)}
+            if (foundId < 0) { rej(`Item not found ${item}`)}
             this.state.readingLog.splice(foundId, 1);
+            this.setLocalStorage(this.state);
             res('done');
         })
     } 
+    setEditItem(item: logItem) {
+        this.state.editItem = item;
+    }
+    async updateItem(item: logItem) {
+        return new Promise((res, rej) => {
+            let foundId = this.state.readingLog.findIndex((d: logItem) => d.uuid === item.uuid);
+            if (foundId < 0) { rej(`Item not found ${item}`)}
+            this.state.readingLog.splice(foundId, 1, item);
+            this.state.editItem = undefined;
+            this.setLocalStorage(this.state);
+            res('updated');
+        })
+    }
 
+    get editItem(): logItem {
+        return this.state.editItem as logItem;
+    }
     get readList() {
         return this.state.readingLog.sort((a: logItem, b: logItem) => b.date.getTime() - a.date.getTime());
     }
-    get streakLength() {
-        let sorted = this.state.readingLog.sort((a: logItem, b: logItem) => a.date.getTime() - b.date.getTime());
+    get streaks() {
+        let sorted = this.readList.map(d => d.date.toLocaleString());
+        let sortedUnique = sorted.filter((value, index: number, self) => {
+            return self.indexOf(value) === index;
+        }).map(d => new Date(d));
 
-        return this.state.readingLog.length;
+        let streaks = [[sortedUnique[0]]];
+        let streakId = 0;
+        let currentDayCount = 1;
+        let firstDayId = 0;
+        for (let i = 1; i < sortedUnique.length; i++) {
+            let el = sortedUnique[i];
+            let firstUtc = new Date(sortedUnique[firstDayId]).setUTCHours(0,0,0,0);
+            let currentUtc = new Date(el).setUTCHours(0,0,0,0);
+            let dayMultiple = currentDayCount++ * 86400000;
+            if ((firstUtc - currentUtc) === dayMultiple) {
+                streaks[streakId].push(el);
+            } else if (i < sortedUnique.length - 1) {
+                streakId++;
+                streaks[streakId] = [el];
+                currentDayCount = 1;
+                firstDayId = i;
+            }
+        }
+
+        let lengths = streaks.map(d => d.length);
+        let longestStreakId = lengths.indexOf(Math.max(...lengths))
+        let longestStreak = streaks[longestStreakId];
+        return {
+            streaks,
+            currentStreak: streaks[0],
+            longestStreak
+        };
     }
 }
 

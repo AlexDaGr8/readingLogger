@@ -1,17 +1,17 @@
 <template>
     <div class="full-calendar">
         <div class="grid-cal month">
-            <button @click="prevYear" :disabled="noPrevYear">prev</button>
+            <button @click="prevYear" :disabled="noPrevYear">Next</button>
             <div>
                 <span :class="{ hidden: editYear }" @click="editYear = true">{{ yearId }}</span>
                 <input :class="{ hidden: !editYear }" type="number" v-model="yearId" @keyup.enter="editYear = false" @blur="editYear = false">
             </div>
-            <button @click="nextYear" :disabled="noNextYear">next</button>
+            <button @click="nextYear" :disabled="noNextYear">Next</button>
         </div>
         <div class="grid-cal month">
-            <button @click="prevMonth" :disabled="noPrevMonth">prev</button>
+            <button @click="prevMonth" :disabled="noPrevMonth">Prev</button>
             {{ month.name }}
-            <button @click="nextMonth" :disabled="noNextMonth">next</button>
+            <button @click="nextMonth" :disabled="noNextMonth">Prev</button>
         </div>
         <div class="grid-cal calendar">
             <div class="day title weekend">Sun</div>
@@ -127,7 +127,7 @@ export default defineComponent({
   display: none;
 }
 .full-calendar {
-    width: 90%;
+    width: 95%;
     margin: 5px auto;
 }
 .grid-cal {
@@ -137,6 +137,7 @@ export default defineComponent({
 .grid-cal.calendar {
   grid-template-columns: repeat(7, minmax(40px, 1fr));
   gap: 5px;
+  margin: 4% 2%;
 }
 .grid-cal.calendar .day {
   border: 0.5px solid grey;
@@ -145,25 +146,28 @@ export default defineComponent({
   border-left-color: transparent;
   border-bottom-color: grey;
   border-radius: 3px;
+  padding: 4px;
 }
 .grid-cal.calendar .day.title {
   border: none;
+  padding: 2px;
 }
 .grid-cal.calendar .day.weekend {
-  border-bottom-color: cyan;
-  background: rgba(221, 221, 221, 0.2);
+  border-bottom-color: var(--color-blue);
+  background: var(--color-blue-op-more);
 }
 .grid-cal.calendar .day:not(.thisMonth):not(.title) {
   color: #ddd;
 }
 .grid-cal.calendar .day.today {
-  color: #e74c3c;
-  border-top-color: #e74c3c;
-  border-left-color: #e74c3c;
-  border-right-color: #e74c3c;
+  color: var(--color-red);
+  border-top-color: var(--color-red);
+  border-left-color: var(--color-red);
+  border-right-color: var(--color-red);
+  background-color: var(--color-red-op-more);
 }
 .grid-cal.month {
-  grid-template-columns: 50px 1fr 50px;
+  grid-template-columns: .25fr 1fr .25fr;
   gap: 5px;
 }
 </style>

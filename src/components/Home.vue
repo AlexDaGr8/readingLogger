@@ -1,10 +1,11 @@
 <template>
   <div>
-    <h1>Home</h1>
+    <h1>Your Reading Log</h1>
     <div class="container">
+      <reading-form class="col-span2"></reading-form>
       <progress-bar class="col-span2"></progress-bar>
-      <reading-list></reading-list>
-      <Calendar></Calendar>
+      <reading-list class="col-span2"></reading-list>
+      <Calendar class="col-span2"></Calendar>
     </div>
   </div>
 </template>
@@ -14,44 +15,10 @@ import { defineComponent } from 'vue';
 import ReadingList from '@/components/ReadingList.vue';
 import Calendar from '@/components/Calendar.vue';
 import ProgressBar from './ProgressBar.vue';
+import ReadingForm from './ReadingForm.vue';
 
 export default defineComponent({
   name: 'Home',
-  components: { ReadingList, Calendar, ProgressBar }
+  components: { ReadingList, Calendar, ProgressBar, ReadingForm }
 });
 </script>
-
-<style>
-.container {
-  display: grid;
-  width: 80vw;
-  grid-template-columns: 1fr 1fr;
-  margin: auto;
-}
-.col-span2 {
-  grid-column: span 2;
-}
-.progress {
-  width: 100%;
-  border: solid blue;
-  margin-bottom: 5px;
-}
-button {
-    display: inline-block;
-    padding: 5px;
-    font-size: 14px;
-    font-weight: 400;
-    cursor: pointer;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    box-shadow: -2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-}
-button.add {
-  background-color: cyan;
-}
-button.delete {
-  width: 30px;
-  height: 30px;
-  background-color: #e74c3c;
-}
-</style>

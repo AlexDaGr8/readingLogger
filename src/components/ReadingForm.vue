@@ -24,7 +24,8 @@
                 <input name="pagesFrom" type="number" v-model="pageTo"> 
             </div>
         </div>
-        <button class="add" @click="add">Add</button>
+        <button v-if="editItem === undefined" class="add" @click="add">Add</button>
+        <button v-else class="update" @click="update">Update</button>
     </div>
 </template>
 
@@ -47,6 +48,7 @@ export default defineComponent({
             return new Date(+splitDate[0], +splitDate[1] - 1, +splitDate[2]);
         }
         let form = reactive<logItem>({
+            uuid: null,
             book: '',
             date: now.value,
             notes: '',
@@ -56,6 +58,22 @@ export default defineComponent({
             pageFrom: null,
             dateStr: toDateValueStr(now.value)
         });
+         let editItem = computed(() => {
+            let toEdit = readStore.editItem;
+            if (toEdit !== undefined) {
+                console.log(readStore.editItem)
+                form.uuid = toEdit.uuid;
+                form.book = toEdit.book;
+                form.date = toEdit.date;
+                form.time = toEdit.time;
+                form.notes = toEdit.notes;
+                form.minutes = toEdit.minutes;
+                form.pageFrom = toEdit.pageFrom;
+                form.pageTo = toEdit.pageTo;
+                form.dateStr = toEdit.dateStr
+            }
+            return toEdit;
+        })
         let add = () => {
             let newData: logItem = {
                 book: form.book,
@@ -68,6 +86,25 @@ export default defineComponent({
                 dateStr: form.dateStr
             }
             readStore.add(newData);
+            resetForm();
+        }
+        let update = async () => {
+            let newData: logItem = {
+                uuid: form.uuid,
+                book: form.book,
+                date: convertToDate(form.dateStr as string),
+                notes: form.notes,
+                time: form.time,
+                minutes: form.minutes,
+                pageTo: form.pageTo,
+                pageFrom: form.pageFrom,
+                dateStr: form.dateStr
+            }
+            let update = await readStore.updateItem(newData);
+            resetForm();
+        }
+        let resetForm = () => {
+            form.uuid = null;
             form.book = '';
             form.date = now.value;
             form.notes = ''
@@ -80,7 +117,9 @@ export default defineComponent({
 
         return {
             ...toRefs(form),
-            add
+            add,
+            editItem,
+            update
         }
     }
 })
