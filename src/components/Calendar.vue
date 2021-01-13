@@ -27,7 +27,8 @@
                 :class="{ 
                     weekend: day.getDay() === 0 || day.getDay() === 6, 
                     thisMonth: isThisMonth(day),
-                    today: isToday(day)
+                    today: isToday(day),
+                    hasLog: findByDay(day)
                 }" 
                 v-for="day in month.days" :key="day"
             >
@@ -38,6 +39,7 @@
 </template>
 <script lang="ts">
 import { yearComp, year, month } from '@/global/utils';
+import { readStore } from '@/store/ReadStore';
 import { defineComponent, reactive, ref, toRefs, computed, watch } from 'vue';
 
 export default defineComponent({
@@ -61,11 +63,9 @@ export default defineComponent({
             }
         );
 
-        // const year = yearItem(state.yearId); Will not work as expect, won't update calendar
         const year = computed<year>(() => yearItem(state.yearId));
         const yearCtrls = reactive({
             noPrevYear: computed(() => state.yearId === Math.min(...years.map((y: year) => y.name))),
-            // noPrevYear: computed(() => yearId.value === 2020),
             noNextYear: computed(() => state.yearId === Math.max(...years.map((y: year) => y.name))),
             prevYear: () => {
                 if (state.yearId > 1700) state.yearId--;
@@ -78,10 +78,6 @@ export default defineComponent({
         });
 
         const monthId = ref<number>(today.value.getMonth());
-        // this will not work, it will not update the rest of the component as expected.
-        // const monthId = {
-        //     value: today.value.getMonth()
-        // }
         const month = computed<month>(() => year.value.months[monthId.value]);
         const monthCtrls = reactive({
             noPrevMonth: computed(() => monthId.value === 0 && state.yearId === Math.min(...years.map((y: year) => y.name))),
@@ -94,7 +90,6 @@ export default defineComponent({
                         monthId.value = 11;
                     }
                 }
-                console.log(monthId.value);
             },
             nextMonth: () => {
                 if (monthId.value < 11) monthId.value++;
@@ -109,12 +104,17 @@ export default defineComponent({
 
         const emptySlots = computed(() => Array.from(Array(month.value.days[0].getDay()).keys()));
 
+        let findByDay = (day: Date) => {
+            return readStore.findByDay(day.toLocaleString());
+        }
+
         return {
             isThisMonth,
             isToday,
             today,
             month,
             emptySlots,
+            findByDay,
             ...toRefs(state),
             ...toRefs(monthCtrls),
             ...toRefs(yearCtrls)
@@ -147,6 +147,17 @@ export default defineComponent({
   border-bottom-color: grey;
   border-radius: 3px;
   padding: 4px;
+  position: relative;
+}
+.grid-cal.calendar .day.hasLog::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    width: 5px;
+    height: 5px;
+    background: var(--color-red);
+    border-radius: 50%;
 }
 .grid-cal.calendar .day.title {
   border: none;

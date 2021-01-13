@@ -76,6 +76,10 @@ class ReadStore extends Store<ReadState> {
         })
     }
 
+    findByDay(dateStr: string) {
+        let hasLog =this.state.readingLog.filter((d: logItem) => d.date.toLocaleString() === dateStr) 
+        return hasLog.length > 0;
+    }
     get editItem(): logItem {
         return this.state.editItem as logItem;
     }
