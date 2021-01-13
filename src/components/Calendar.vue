@@ -128,7 +128,7 @@ export default defineComponent({
 }
 .full-calendar {
     width: 90%;
-    margin: auto;
+    margin: 5px auto;
 }
 .grid-cal {
   display: grid;
