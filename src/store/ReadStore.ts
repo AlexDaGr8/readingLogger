@@ -63,10 +63,10 @@ class ReadStore extends Store<ReadState> {
     get readList() {
         return this.state.readingLog.sort((a: logItem, b: logItem) => b.date.getTime() - a.date.getTime());
     }
-    get streak() {
+    get streakLength() {
         let sorted = this.state.readingLog.sort((a: logItem, b: logItem) => a.date.getTime() - b.date.getTime());
-        
-        return this.state.readingLog;
+
+        return this.state.readingLog.length;
     }
 }
 

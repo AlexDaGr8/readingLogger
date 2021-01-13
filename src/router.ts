@@ -16,4 +16,6 @@ const routerOptions: RouterOptions = {
 
 const router: Router = createRouter(routerOptions);
 
+router.replace('/');
+
 export default router;

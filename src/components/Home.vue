@@ -2,7 +2,7 @@
   <div>
     <h1>Home</h1>
     <div class="container">
-      <div class="col-span2 progress"></div>
+      <progress-bar class="col-span2"></progress-bar>
       <reading-list></reading-list>
       <Calendar></Calendar>
     </div>
@@ -13,10 +13,11 @@
 import { defineComponent } from 'vue';
 import ReadingList from '@/components/ReadingList.vue';
 import Calendar from '@/components/Calendar.vue';
+import ProgressBar from './ProgressBar.vue';
 
 export default defineComponent({
   name: 'Home',
-  components: { ReadingList, Calendar }
+  components: { ReadingList, Calendar, ProgressBar }
 });
 </script>
 

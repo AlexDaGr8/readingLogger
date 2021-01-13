@@ -44,7 +44,6 @@ export default defineComponent({
         }
         let convertToDate = (str: string) => {
             let splitDate: string[] = str.split('-');
-            console.log('splitDate', splitDate)
             return new Date(+splitDate[0], +splitDate[1] - 1, +splitDate[2]);
         }
         let form = reactive<logItem>({
@@ -58,8 +57,6 @@ export default defineComponent({
             dateStr: toDateValueStr(now.value)
         });
         let add = () => {
-            console.log('form.dateStr', form.dateStr)
-            console.log('new Date(form.dateStr as string)', convertToDate(form.dateStr as string))
             let newData: logItem = {
                 book: form.book,
                 date: convertToDate(form.dateStr as string),

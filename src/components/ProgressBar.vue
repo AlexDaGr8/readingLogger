@@ -9,7 +9,7 @@ import { readStore } from '@/store/ReadStore'
 import { computed, defineComponent } from 'vue'
 export default defineComponent({
     setup() {
-        let streakLength = computed(() => readStore.streak.length );
+        let streakLength = computed(() => readStore.streakLength );
 
         return {
             streakLength
