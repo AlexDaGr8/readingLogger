@@ -1,6 +1,6 @@
 module.exports = {
     // options...
-    publicPath: process.env.NODE_ENV === 'production' ? '/readingLogger/' : '/',
+    publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
   
     // Other options include:
     outputDir: undefined,
