@@ -51,6 +51,7 @@ class ReadStore extends Store<ReadState> {
     add(payload: logItem) {
         payload.uuid = this.uuidv4();
         this.state.readingLog.push(payload);
+        this.state.editItem = undefined;
         this.setLocalStorage(this.state);
     }
     async deleteItem(item: logItem) {

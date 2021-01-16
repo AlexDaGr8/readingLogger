@@ -2,7 +2,9 @@
   <div class="list">
     <div v-for="data in readList" :key="data.date" class="grid-2">
       <div>
-        {{ formatDate(data.date) }} - {{ data.book }} <span v-show="data.minutes">({{ data.minutes }} min)</span>
+        {{ formatDate(data.date) }} - {{ data.book }} 
+        <span v-show="data.minutes">({{ data.minutes }} min)</span> 
+        <span v-show="data.pageFrom && data.pageTo">(pages {{ data.pageFrom }}-{{ data.pageTo }})</span>
       </div>
       <div class="button-group">
         <button class="edit" @click="editItem(data)">Edit</button>

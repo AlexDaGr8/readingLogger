@@ -21,11 +21,14 @@
             <div>
                 <input name="pagesFrom" type="number" v-model="pageFrom"> 
                 <span>-</span>
-                <input name="pagesFrom" type="number" v-model="pageTo"> 
+                <input name="pagesTo" type="number" v-model="pageTo"> 
             </div>
         </div>
         <button v-if="editItem === undefined" class="add" @click="add">Add</button>
-        <button v-else class="update" @click="update">Update</button>
+        <div class="button-group" v-else>
+            <button class="update" @click="update">Update</button>
+            <button class="add" @click="add">Save New</button>
+        </div>
     </div>
 </template>
 
@@ -81,10 +84,11 @@ export default defineComponent({
                 notes: form.notes,
                 time: form.time,
                 minutes: form.minutes,
-                pageTo: form.pageTo,
-                pageFrom: form.pageFrom,
+                pageTo: form.pageTo ? +form.pageTo as number : null,
+                pageFrom: form.pageFrom ? +form.pageFrom as number : null,
                 dateStr: form.dateStr
             }
+            console.log(newData)
             readStore.add(newData);
             resetForm();
         }
@@ -138,5 +142,9 @@ button {
     margin: 0 auto;
     display: block;
     width: 30%;
+}
+.button-group button {
+    margin: 0 3%;
+    display: inline;
 }
 </style>
