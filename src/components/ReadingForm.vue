@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="reading-form">
         <div class="field">
             <label for="book">Book: </label>
             <input name="book" type="text" v-model="book" placeholder="Enter Book...">
@@ -130,6 +130,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.reading-form {
+    width: 90%;
+}
 input[type="number"] {
     width: 50px;
 }
@@ -137,6 +140,10 @@ input[type="number"] {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     margin: 5px;
+    text-align: left;
+}
+.field label {
+    text-align: center;
 }
 button {
     margin: 0 auto;

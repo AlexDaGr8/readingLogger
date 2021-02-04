@@ -36,6 +36,7 @@ export default defineComponent({
   --color-yellow-op: rgba(255, 199, 89, 0.7);
   --color-purple-op: rgba(119, 101, 227, 0.7);
   --color-grey-op: rgba(232, 236, 237, 0.7);
+  --color-black-op: rgba(23, 17, 35, 0.3);
 }
 #app {
   font-family: 'Courier New', monospace;
@@ -71,12 +72,12 @@ button {
     cursor: pointer;
     border: 1px solid transparent;
     border-radius: 4px;
-    box-shadow: -1px 2px 2px 1px rgba(0, 0, 0,0.7);
+    box-shadow: -1px 2px 2px 1px var(--color-black-op);
     background-color: var(--color-grey);
     position: relative;
 }
 button:active {
-    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 1);
+    box-shadow: 0px 1px 2px 0px var(--color-black-op);
     top: 1px;
     left: -1px;
 }
