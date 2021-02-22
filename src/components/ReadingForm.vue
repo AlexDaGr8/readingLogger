@@ -13,8 +13,11 @@
             <input name="time" type="time" v-model="time">
         </div>
         <div class="field">
-            <label for="minutes">Minutes: </label>
-            <input name="minutes" type="number" v-model="minutes">
+            <label for="minutes">Minutes Read: </label>
+            <div>
+                <input name="minutes" type="number" v-model="minutes">
+                <button @click="startTime">Start Timer</button>
+            </div>
         </div>
         <div class="field">
             <label>Pages (from-to): </label>
@@ -33,8 +36,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, ref, reactive, computed } from 'vue'
-import { logItem, ReadState, readStore } from '@/store/ReadStore'
+import { defineComponent, toRefs, ref, reactive, computed, watch } from 'vue'
+import { logItem, readStore } from '@/store/ReadStore'
+import { timerStore } from '@/store/TimerStore'
 
 export default defineComponent({
     setup() {
@@ -64,7 +68,6 @@ export default defineComponent({
          let editItem = computed(() => {
             let toEdit = readStore.editItem;
             if (toEdit !== undefined) {
-                console.log(readStore.editItem)
                 form.uuid = toEdit.uuid;
                 form.book = toEdit.book;
                 form.date = toEdit.date;
@@ -88,7 +91,6 @@ export default defineComponent({
                 pageFrom: form.pageFrom ? +form.pageFrom as number : null,
                 dateStr: form.dateStr
             }
-            console.log(newData)
             readStore.add(newData);
             resetForm();
         }
@@ -119,11 +121,23 @@ export default defineComponent({
             form.dateStr = toDateValueStr(now.value)
         }
 
+        const startTime = () => {
+            timerStore.startTimer();
+        }
+        const time = computed(() => timerStore.getState().time)
+        watch(
+            () => time.value,
+            (curr, prev) => {
+                form.minutes = timerStore.timeObj.getTotalMinutes();
+            }
+        )
+
         return {
             ...toRefs(form),
             add,
             editItem,
-            update
+            update,
+            startTime
         }
     }
 })
@@ -134,11 +148,11 @@ export default defineComponent({
     width: 90%;
 }
 input[type="number"] {
-    width: 50px;
+    width: 40%;
 }
 .field {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     margin: 5px;
     text-align: left;
 }
@@ -149,6 +163,11 @@ button {
     margin: 0 auto;
     display: block;
     width: 30%;
+}
+.field button {
+    display: inline-block;
+    margin: 0 5%;
+    width: 45%;
 }
 .button-group button {
     margin: 0 3%;

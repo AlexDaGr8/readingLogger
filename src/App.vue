@@ -5,16 +5,25 @@
     </nav>
     <router-view></router-view> -->
     <home></home>
+    <timer-modal v-if="showModal"></timer-modal>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import Home from '@/components/Home.vue';
+import TimerModal from '@/components/TimerModal.vue'
+import { timerStore } from '@/store/TimerStore';
 
 export default defineComponent({
   name: 'App',
-  components: { Home }
+  components: { Home, TimerModal },
+  setup() {
+    const showModal = computed(() => timerStore.showModal);
+    return {
+      showModal
+    }
+  }
 });
 </script>
 
@@ -49,7 +58,7 @@ export default defineComponent({
 .container {
   display: grid;
   width: 80vw;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   margin: auto;
 }
 .container > div {
@@ -63,7 +72,7 @@ export default defineComponent({
 }
 button {
     display: inline-block;
-    margin: 0 5px;
+    margin: 5px 5px;
     padding: 5px 8px;
 		appearance: none;
 		outline: 0;
@@ -84,10 +93,10 @@ button:active {
 button:hover {
     background-color: var(--color-grey-op);
 }
-button.add {
+button.add, button.green {
   background-color: var(--color-green);
 }
-button.add:hover {
+button.add:hover, button.green:hover{
     background-color: var(--color-green-op);
 }
 button.edit {
@@ -96,12 +105,14 @@ button.edit {
 button.edit:hover {
     background-color: var(--color-blue-op);
 }
+button.delete, button.red {
+  background-color: var(--color-red);
+}
 button.delete {
   width: 30px;
   height: 30px;
-  background-color: var(--color-red);
 }
-button.delete:hover {
+button.delete:hover, button.red:hover {
     background-color: var(--color-red-op);
 }
 </style>

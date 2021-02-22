@@ -3,7 +3,7 @@
         <h4 class="book">{{ data.book }}</h4>
         <span class="date">{{ formatDate(data.date) }}</span>
         <div class="two-columns">
-            <span v-show="data.minutes">Time read: </span> <span v-show="data.minutes">{{ data.minutes }} minutes</span>
+            <span v-show="data.minutes">Time read: </span> <span v-show="data.minutes">{{ minutesToString(data.minutes) }}</span>
             <span v-show="data.pageFrom && data.pageTo">Pages read:</span> <span v-show="data.pageFrom && data.pageTo">{{data.pageTo - data.pageFrom }} pages ({{ data.pageFrom }}-{{ data.pageTo }})</span>
         </div>
         <div class="button-group">
@@ -33,11 +33,17 @@ export default defineComponent({
         let editItem = (item: logItem) => {
             readStore.setEditItem(item);
         } 
+        const minutesToString: (minutes: number) => string = (minutes: number) => {
+            let min: string = Math.floor(minutes).toString().padStart(2,'0');
+            let seconds: string = Math.floor((minutes % 1) * 100).toString().padStart(2,'0');
+            return `${min}:${seconds}`;
+        }
         return {
             data,
             formatDate,
             deleteItem,
-            editItem
+            editItem,
+            minutesToString
         };
     },
 });
